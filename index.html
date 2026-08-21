@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daftar &amp; Ngetang yuswa siswa-siswi By Usep Zaenal M</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root{
+    --navy-900:#0F1A2E;
+    --navy-800:#152540;
+    --navy-700:#1F3A5F;
+    --navy-600:#2A4770;
+    --ivory:#FAF6EC;
+    --ivory-dim:#F1EBDA;
+    --gold:#C9A227;
+    --gold-dim:#E4C863;
+    --brick:#8B3A3A;
+    --brick-dim:#C97A6A;
+    --ink:#182234;
+    --ink-soft:#4B5A72;
+    --line:#DCD3B8;
+    --ok:#3E7C64;
+    --shadow: 0 18px 40px -20px rgba(15,26,46,0.55);
+    --radius: 14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Plus Jakarta Sans', sans-serif;
+    background:
+      radial-gradient(1200px 500px at 15% -10%, rgba(201,162,39,0.10), transparent 60%),
+      linear-gradient(180deg, var(--navy-900) 0%, var(--navy-800) 340px, #ECE7D8 340px, #ECE7D8 100%);
+    color:var(--ink);
+    min-height:100vh;
+    padding-bottom:60px;
+  }
+  .wrap{max-width:1180px; margin:0 auto; padding:0 20px;}
+
+  /* ---------- Header ---------- */
+  header.hero{padding:44px 0 0 0;}
+  .eyebrow{
+    color:var(--gold-dim);
+    font-family:'IBM Plex Mono', monospace;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    font-size:12px;
+    margin:0 0 10px 0;
+  }
+  h1.title{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(28px, 4vw, 44px);
+    color:#F7F3E4;
+    margin:0 0 8px 0;
+    line-height:1.08;
+  }
+  .subtitle{
+    color:#C7CFDD;
+    font-size:15px;
+    margin:0 0 26px 0;
+    max-width:640px;
+  }
+  .meta-row{
+    display:flex; flex-wrap:wrap; gap:10px;
+    margin-bottom:26px;
+  }
+  .meta-chip{
+    display:flex; align-items:center; gap:8px;
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(228,200,99,0.25);
+    border-radius:999px;
+    padding:7px 14px;
+    font-size:13px;
+    color:#EFE7CE;
+  }
+  .meta-chip label{color:#9FAAC0; font-size:11px; text-transform:uppercase; letter-spacing:.06em; font-family:'IBM Plex Mono',monospace;}
+  .meta-chip input{
+    background:transparent; border:none; color:#F7F3E4; font-family:'IBM Plex Mono',monospace;
+    font-size:13px; width:auto; outline:none; padding:0;
+  }
+  .meta-chip input[type="date"]{color-scheme:dark;}
+  .meta-chip-logo{gap:8px;}
+  .logo-pick-btn{
+    background:rgba(255,255,255,0.10); border:1px solid rgba(228,200,99,0.35); color:#F7F3E4;
+    font-family:'Plus Jakarta Sans', sans-serif; font-size:12px; font-weight:600;
+    border-radius:6px; padding:5px 10px; cursor:pointer; white-space:nowrap;
+  }
+  .logo-pick-btn:hover{background:rgba(255,255,255,0.18);}
+  .logo-preview{height:26px; max-width:80px; object-fit:contain; background:#fff; border-radius:4px; padding:2px;}
+  .logo-clear-btn{
+    background:transparent; border:none; color:var(--brick-dim); font-size:16px; line-height:1; cursor:pointer; padding:0 2px;
+  }
+  .logo-clear-btn:hover{color:#fff;}
+
+  .frieze{width:100%; height:46px; display:block; margin-top:6px; opacity:.85;}
+
+  /* ---------- Card ---------- */
+  .card{
+    background:var(--ivory);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    margin-top:-18px;
+    padding:26px 26px 10px 26px;
+    position:relative;
+  }
+  .toolbar{
+    display:flex; flex-wrap:wrap; align-items:center; gap:10px;
+    margin-bottom:18px;
+    padding-bottom:18px;
+    border-bottom:1px solid var(--line);
+  }
+  .btn{
+    font-family:'Plus Jakarta Sans', sans-serif;
+    font-weight:600;
+    font-size:13.5px;
+    border-radius:9px;
+    border:1px solid transparent;
+    padding:9px 15px;
+    cursor:pointer;
+    display:inline-flex; align-items:center; gap:7px;
+    transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
+    white-space:nowrap;
+  }
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--navy-700); color:#fff;}
+  .btn-primary:hover{background:var(--navy-600);}
+  .btn-gold{background:var(--gold); color:#2A2005;}
+  .btn-gold:hover{background:var(--gold-dim);}
+  .btn-outline{background:transparent; color:var(--navy-700); border-color:var(--navy-700);}
+  .btn-outline:hover{background:rgba(31,58,95,0.06);}
+  .btn-ghost-danger{background:transparent; color:var(--brick); border-color:var(--brick-dim);}
+  .btn-ghost-danger:hover{background:rgba(139,58,58,0.07);}
+  .btn-danger-text{background:transparent; color:var(--brick); border-color:transparent; padding:4px 6px; font-size:12px;}
+  .btn-danger-text:hover{text-decoration:underline;}
+  .search-box{
+    margin-left:auto;
+    display:flex; align-items:center; gap:8px;
+    background:#fff; border:1px solid var(--line); border-radius:9px;
+    padding:8px 12px; min-width:220px;
+  }
+  .search-box input{border:none; outline:none; font-family:'Plus Jakarta Sans'; font-size:13.5px; width:100%; background:transparent;}
+  input[type="file"]{display:none;}
+
+  /* ---------- Table (on-screen) ---------- */
+  .table-scroll{overflow-x:auto; border-radius:10px; border:1px solid var(--line);}
+  table{width:100%; border-collapse:collapse; min-width:1020px; background:#fff;}
+  thead th{
+    background:var(--navy-800); color:#F1EBDA; text-align:left; font-size:11.5px;
+    letter-spacing:.05em; text-transform:uppercase; font-family:'IBM Plex Mono', monospace;
+    font-weight:500; padding:12px 10px; position:sticky; top:0; z-index:2; white-space:nowrap;
+    cursor:pointer; user-select:none;
+  }
+  thead th.no-sort{cursor:default;}
+  thead th .arrow{opacity:.5; font-size:10px; margin-left:3px;}
+  tbody tr{border-bottom:1px solid var(--line);}
+  tbody tr:nth-child(even){background:#FCFAF3;}
+  tbody tr:hover{background:#F5EFD9;}
+  tbody td{padding:6px 8px; vertical-align:middle;}
+  td.no-col{font-family:'IBM Plex Mono', monospace; color:var(--ink-soft); font-size:13px; text-align:center; width:36px;}
+  td input, td select{
+    width:100%; border:1px solid transparent; background:transparent;
+    font-family:'Plus Jakarta Sans', sans-serif; font-size:13.5px; color:var(--ink);
+    padding:6px 7px; border-radius:6px; outline:none;
+  }
+  td input.mono, td.nisn-col input, td.induk-col input{font-family:'IBM Plex Mono', monospace; font-size:12.5px;}
+  td input:hover, td select:hover{border-color:var(--line);}
+  td input:focus, td select:focus{border-color:var(--navy-600); background:#fff; box-shadow:0 0 0 3px rgba(31,58,95,0.10);}
+  td input.missing{background:#FBEAEA; border-color:var(--brick-dim);}
+  .name-col input{font-weight:600; min-width:170px;}
+  .age-col{font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--ink-soft); white-space:nowrap;}
+  select.jk-select{cursor:pointer;}
+  .action-col{text-align:center; white-space:nowrap;}
+  .warn-dot{display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--brick); margin-left:5px; vertical-align:middle;}
+  .empty-row td{padding:34px 10px; text-align:center; color:var(--ink-soft); font-style:italic;}
+
+  /* ---------- Recap ---------- */
+  .recap{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin:26px 0 22px 0;}
+  .seal{background:linear-gradient(155deg, var(--navy-700), var(--navy-900)); border-radius:12px; padding:16px 18px; color:#fff; position:relative; overflow:hidden;}
+  .seal::after{content:""; position:absolute; right:-18px; top:-18px; width:74px; height:74px; border-radius:50%; border:2px solid rgba(228,200,99,0.28);}
+  .seal .num{font-family:'Fraunces', serif; font-size:32px; font-weight:600; line-height:1;}
+  .seal .lbl{font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:#C7CFDD; margin-top:6px;}
+  .seal.gold{background:linear-gradient(155deg, #7A611C, #4A3A0F);}
+
+  .subhead{font-family:'Fraunces', serif; font-weight:600; font-size:18px; color:var(--navy-800); margin:8px 0 12px 0; display:flex; align-items:center; gap:10px;}
+  .subhead .rule{flex:1; height:1px; background:var(--line);}
+  .subhead .hint{font-family:'Plus Jakarta Sans'; font-weight:400; font-size:12px; color:var(--ink-soft);}
+
+  .age-grid{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:30px;}
+  .age-cell{background:#fff; border:1px solid var(--line); border-radius:10px; padding:10px 14px; min-width:110px;}
+  .age-cell .ttl{font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em;}
+  .age-cell .row{display:flex; gap:12px; margin-top:6px; font-size:13px;}
+  .age-cell .row span b{font-family:'IBM Plex Mono', monospace;}
+
+  /* ---------- Pengesahan form (on-screen) ---------- */
+  .signoff-form{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+    gap:12px; margin-bottom:30px;
+  }
+  .field{display:flex; flex-direction:column; gap:5px;}
+  .field label{font-family:'IBM Plex Mono', monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft);}
+  .field input{
+    border:1px solid var(--line); border-radius:8px; padding:9px 11px; font-family:'Plus Jakarta Sans';
+    font-size:13.5px; background:#fff; outline:none;
+  }
+  .field input:focus{border-color:var(--navy-600); box-shadow:0 0 0 3px rgba(31,58,95,0.10);}
+
+  footer.foot{
+    max-width:1180px; margin:26px auto 0 auto; padding:0 20px 20px 20px;
+    color:#5C6A83; font-size:12px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+  }
+
+  .toast{
+    position:fixed; bottom:22px; left:50%; transform:translate(-50%,20px);
+    background:var(--navy-900); color:#F7F3E4; padding:11px 20px; border-radius:9px;
+    font-size:13.5px; box-shadow:var(--shadow); opacity:0; pointer-events:none; transition:all .25s ease;
+    font-family:'Plus Jakarta Sans', sans-serif; border:1px solid rgba(228,200,99,0.3); z-index:50;
+  }
+  .toast.show{opacity:1; transform:translate(-50%,0);}
+
+  @media (max-width:640px){
+    .card{padding:18px 14px 6px 14px;}
+    .search-box{margin-left:0; width:100%;}
+    .toolbar{flex-direction:column; align-items:stretch;}
+  }
+
+  /* ============================================================
+     PRINT — a separate, plain-text print sheet (#printArea),
+     built by JS right before printing. The interactive app
+     (inputs, selects, date pickers) is never printed directly.
+  ============================================================ */
+  #printArea{display:none;}
+  @media print{
+    @page{ size:A4 landscape; margin:12mm 12mm; }
+    html, body{background:#fff !important; min-height:0 !important; height:auto !important; padding:0 !important; margin:0 !important;}
+    body > *:not(#printArea){display:none !important;}
+    #printArea{
+      display:block !important; position:static; width:100%; background:#fff;
+      font-family:'Plus Jakarta Sans', sans-serif; color:#111;
+    }
+    .p-letterhead{text-align:center; border-bottom:2px solid #1F3A5F; padding-bottom:10px; margin-bottom:14px;}
+    .p-logo{max-height:56px; max-width:180px; object-fit:contain; margin:0 auto 6px auto; display:block;}
+    .p-eyebrow{font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:#1F3A5F;}
+    .p-title{font-family:'Fraunces', serif; font-weight:700; font-size:22px; margin:4px 0; color:#111;}
+    .p-sub{font-size:12px; color:#333;}
+    table.p-table{width:100%; border-collapse:collapse; font-size:11px; margin-bottom:14px;}
+    table.p-table th, table.p-table td{border:1px solid #999; padding:5px 6px; text-align:left;}
+    table.p-table thead th{background:#1F3A5F !important; color:#fff !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; font-family:'IBM Plex Mono', monospace; font-size:10px; text-transform:uppercase;}
+    table.p-table td.p-num{text-align:center; font-family:'IBM Plex Mono', monospace;}
+    table.p-table td.p-mono{font-family:'IBM Plex Mono', monospace;}
+    table.p-table thead{display:table-header-group;}
+    table.p-table tr{page-break-inside:avoid;}
+    .p-recap{display:flex; gap:26px; align-items:flex-start; margin-bottom:16px; page-break-inside:avoid;}
+    .p-recap-box{border:1px solid #999; border-radius:6px; padding:8px 14px; font-size:12px; white-space:nowrap; flex:0 0 auto;}
+    .p-recap-box b{font-family:'IBM Plex Mono', monospace;}
+    table.p-age{border-collapse:collapse; font-size:11px;}
+    table.p-age th, table.p-age td{border:1px solid #999; padding:4px 10px; text-align:center;}
+    table.p-age thead th{background:#EFE7CE !important; color:#111 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    .p-signoff{display:flex; justify-content:space-between; margin-top:34px; page-break-inside:avoid;}
+    .p-signoff-col{width:44%; text-align:center; font-size:12.5px;}
+    .p-sign-space{height:64px;}
+    .p-sign-name{font-weight:700; text-decoration:underline;}
+    .p-sign-nip{font-size:11.5px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow" id="eyebrowText">SD Negeri Citere &middot; Pangalengan, Jawa Barat</p>
+    <h1 class="title">Daftar &amp; Pembaharuan Usia Siswa</h1>
+    <p class="subtitle"><span id="kelasFaseText">Kelas V B</span> — dihitung otomatis dari tanggal lahir setiap siswa terhadap tanggal acuan. Pengganti berkas Excel, bisa diedit langsung dan tersimpan di perangkat ini.</p>
+    <div class="meta-row">
+      <div class="meta-chip"><label>Nama Instansi / Sekolah</label><input id="namaInstansi" type="text" value="SD Negeri Citere · Pangalengan, Jawa Barat"></div>
+      <div class="meta-chip"><label>Kelas / Fase</label><input id="kelasFase" type="text" value="Kelas V B"></div>
+      <div class="meta-chip"><label>Tahun Ajaran</label><input id="tahunAjaran" type="text" value="2025/2026"></div>
+      <div class="meta-chip"><label>Wali Kelas</label><input id="waliKelas" type="text" value="Usep Zaenal Mutaqin, S.Pd."></div>
+      <div class="meta-chip"><label>Tanggal Acuan Usia</label><input id="tanggalAcuan" type="date"></div>
+      <div class="meta-chip meta-chip-logo">
+        <label>Logo Instansi</label>
+        <button type="button" class="logo-pick-btn" id="btnLogoPick">Pilih Berkas...</button>
+        <input type="file" id="logoInput" accept="image/*">
+        <img id="logoPreview" class="logo-preview" style="display:none;" alt="Logo">
+        <button type="button" class="logo-clear-btn" id="btnLogoClear" style="display:none;" title="Hapus logo">&times;</button>
+      </div>
+    </div>
+    <svg class="frieze" viewBox="0 0 1180 46" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 34 C 30 10, 60 10, 90 26 C 110 36, 130 36, 150 22 C 170 8, 195 8, 215 24 C 235 38, 260 38, 280 20 C 300 6, 325 6, 345 22 C 365 36, 390 36, 410 20 C 430 6, 455 6, 475 22 C 495 36, 520 36, 540 20 C 560 6, 585 6, 605 22 C 625 36, 650 36, 670 20 C 690 6, 715 6, 735 22 C 755 36, 780 36, 800 20 C 820 6, 845 6, 865 22 C 885 36, 910 36, 930 20 C 950 6, 975 6, 995 22 C 1015 36, 1040 36, 1060 20 C 1080 6, 1105 6, 1125 22 C 1145 34, 1165 34, 1180 24"
+        fill="none" stroke="#C9A227" stroke-width="1.4" stroke-linecap="round" opacity="0.9"/>
+      <path d="M0 40 C 30 20, 60 20, 90 34 C 110 42, 130 42, 150 30 C 170 18, 195 18, 215 32 C 235 44, 260 44, 280 28 C 300 16, 325 16, 345 30 C 365 42, 390 42, 410 28 C 430 16, 455 16, 475 30 C 495 42, 520 42, 540 28 C 560 16, 585 16, 605 30 C 625 42, 650 42, 670 28 C 690 16, 715 16, 735 30 C 755 42, 780 42, 800 28 C 820 16, 845 16, 865 30 C 885 42, 910 42, 930 28 C 950 16, 975 16, 995 30 C 1015 42, 1040 42, 1060 28 C 1080 16, 1105 16, 1125 30 C 1145 40, 1165 40, 1180 32"
+        fill="none" stroke="#F1EBDA" stroke-width="1" stroke-linecap="round" opacity="0.35"/>
+    </svg>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="card">
+
+    <div class="toolbar">
+      <button class="btn btn-primary" id="btnSaveFile">&#128190; Simpan Data</button>
+      <button class="btn btn-outline" id="btnLoadFile">Buka Data Tersimpan</button>
+      <input type="file" id="fileLoadState" accept=".json">
+      <button class="btn btn-primary" id="btnAdd">+ Tambah Siswa</button>
+      <button class="btn btn-gold" id="btnExport">Ekspor ke Excel</button>
+      <button class="btn btn-outline" id="btnImport">Impor dari Excel</button>
+      <button class="btn btn-outline" id="btnTemplate">Unduh Template Impor</button>
+      <input type="file" id="fileImport" accept=".xlsx,.xls">
+      <button class="btn btn-outline" id="btnPrint">Cetak</button>
+      <button class="btn btn-ghost-danger" id="btnReset">Reset Data</button>
+      <div class="search-box">
+        <span>&#128269;</span>
+        <input id="searchInput" type="text" placeholder="Cari nama atau NISN...">
+      </div>
+    </div>
+
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th class="no-sort">No</th>
+            <th data-sort="nisn">NISN <span class="arrow"></span></th>
+            <th data-sort="noInduk">No Induk <span class="arrow"></span></th>
+            <th data-sort="nama">Nama <span class="arrow"></span></th>
+            <th data-sort="jk">JK <span class="arrow"></span></th>
+            <th data-sort="tempatLahir">Tempat Lahir <span class="arrow"></span></th>
+            <th data-sort="tglLahir">Tanggal Lahir <span class="arrow"></span></th>
+            <th class="no-sort">Usia (thn / bln / hr)</th>
+            <th class="no-sort action-col">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="subhead"><span>Rekap Siswa</span><span class="rule"></span></div>
+    <div class="recap">
+      <div class="seal"><div class="num" id="recapTotal">0</div><div class="lbl">Total Siswa</div></div>
+      <div class="seal"><div class="num" id="recapL">0</div><div class="lbl">Laki-laki</div></div>
+      <div class="seal"><div class="num" id="recapP">0</div><div class="lbl">Perempuan</div></div>
+      <div class="seal gold"><div class="num" id="recapMissing">0</div><div class="lbl">Data Belum Lengkap</div></div>
+    </div>
+
+    <div class="subhead"><span>Sebaran Usia</span><span class="rule"></span></div>
+    <div class="age-grid" id="ageGrid"></div>
+
+    <div class="subhead"><span>Data Pengesahan</span><span class="rule"></span><span class="hint">tampil di halaman cetak</span></div>
+    <div class="signoff-form">
+      <div class="field"><label>Nama Kepala Sekolah</label><input id="kepsekNama" type="text" value="Dede Nani Sumarni, S.Pd.SD."></div>
+      <div class="field"><label>NIP Kepala Sekolah</label><input id="kepsekNip" type="text" placeholder="............................"></div>
+      <div class="field"><label>NIP Wali Kelas</label><input id="waliNip" type="text" placeholder="............................"></div>
+      <div class="field"><label>Tempat Cetak</label><input id="tempatCetak" type="text" value="Subang"></div>
+      <div class="field"><label>Tanggal Cetak</label><input id="tanggalCetak" type="date"></div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="foot">
+  <span>Aplikasi dibuat oleh Usep Zaenal Mutaqin &middot; Ver. 200826xz</span>
+  <span>Data tersimpan otomatis di peramban perangkat ini</span>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<!-- print-only sheet, populated by JS just before printing -->
+<div id="printArea"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  const STORAGE_KEY = "daftarUsiaSiswa_5B_v1";
+
+  const seed = [
+    ["3165077394","222301034","Akifah Grace Taufiq","P","BANDUNG","2016-03-10"],
+    ["0157747012","222301035","Alifia Nur Hanifah","P","BANDUNG","2015-10-17"],
+    ["3150222936","222301036","Alpi Alkahfi","L","BANDUNG","2015-05-10"],
+    ["3167581584","222301067","Aniq Adiba Abqariah","P","BANDUNG","2016-02-02"],
+    ["3154908247","222301037","Aqila Kanza Salsabila","P","BANDUNG","2015-04-10"],
+    ["0158619902","222301038","Callista Aliffania","P","BANDUNG","2015-09-03"],
+    ["3154063622","222301039","Citra Rizkia","P","BANDUNG","2015-05-05"],
+    ["3152558103","222301040","Dadan","L","BANDUNG","2015-04-10"],
+    ["3157695596","222301041","Dzifaira Friskeila Eriawan","P","BANDUNG","2015-08-15"],
+    ["3151833712","222301042","Fitria Khoirunnisa","P","BANDUNG","2015-07-16"],
+    ["3158537287","222301043","Hisyam Dzaki Hammam","L","BANDUNG","2015-07-23"],
+    ["","","Ibnu Al Azis","L","BANDUNG","2015-07-23"],
+    ["3151509854","222301044","Keisha Arshifa Salsabila","P","BANDUNG","2015-03-26"],
+    ["3151877862","222301045","Khoirunisa","P","BANDUNG","2015-05-31"],
+    ["3158295809","222301046","Kirana Hilyah Nafisah","P","BANDUNG","2015-01-22"],
+    ["3145889432","222301047","Lina","P","BANDUNG","2014-12-01"],
+    ["3151940349","222301048","M Razaky Pirmansyah","L","BANDUNG","2015-08-29"],
+    ["3155343748","222301049","Muhamad Izhar","L","BANDUNG","2015-07-13"],
+    ["3159581252","222301050","Muhamad Rizky Aditya Pamungkas","L","BANDUNG","2015-07-20"],
+    ["3153871881","222301051","Naya Tri Insani Ramadhani","P","BANDUNG","2015-06-22"],
+    ["3157845289","222301052","Nurul Nur'aeni","P","BANDUNG","2015-09-18"],
+    ["3153964058","222301053","Pasya Kusniadi Ramadan","L","BANDUNG","2015-07-02"],
+    ["","","Qeisha Zahra Nugraha","P","BANDUNG","2015-07-03"],
+    ["3156701568","222301055","Rafaldhan Athala Junior R","L","BANDUNG","2015-11-30"],
+    ["3154328263","222301056","Ramdan Sulaeman","L","BANDUNG","2015-06-14"],
+    ["3152639259","222301057","Reza Ramadhansyah","L","BANDUNG","2015-07-06"],
+    ["3159509468","222301058","Ridho Hafidz","L","BANDUNG","2015-12-01"],
+    ["0158678647","222301059","Sirin Kaysha Amiti","P","BANDUNG","2015-07-25"],
+    ["","","Syifa Shidqiyah Rafifah","P","BANDUNG","2015-07-25"],
+    ["3159055025","222301061","Tegar Gumilar","L","BANDUNG","2015-12-09"],
+    ["3157074944","222301062","Tiara Nur Ramdani","P","BANDUNG","2015-06-24"],
+    ["3168157351","222301063","Wafi Nugraha","L","BANDUNG","2016-02-25"],
+    ["3150147516","222301064","Zainan Zunnata Taqiya","L","BANDUNG","2015-06-23"],
+    ["","","Sopian Nurfadilah","L","BANDUNG","2015-07-03"],
+    ["3159297434","222301060","Taupik Ramadan","L","BANDUNG","2015-07-15"],
+    ["3159497566","","Nadhira Khansa Ardani","P","BANDUNG","2015-07-22"]
+  ].map((r,i) => ({
+    id: "s" + (i+1) + "_" + Date.now(),
+    nisn:r[0], noInduk:r[1], nama:r[2], jk:r[3], tempatLahir:r[4], tglLahir:r[5]
+  }));
+
+  let siswa = loadData();
+  let sortKey = null, sortDir = 1;
+  let refDate = new Date();
+  let logoDataUrl = null;
+
+  const META_KEY = "daftarUsiaSiswa_5B_meta_v1";
+  const metaFieldIds = ["namaInstansi","kelasFase","tahunAjaran","waliKelas","waliNip","kepsekNama","kepsekNip","tempatCetak"];
+
+  function loadMeta(){
+    try{
+      const raw = localStorage.getItem(META_KEY);
+      if(raw){
+        const m = JSON.parse(raw);
+        metaFieldIds.forEach(id=>{
+          const el = document.getElementById(id);
+          if(el && m[id] !== undefined) el.value = m[id];
+        });
+        if(m.logoDataUrl){ setLogo(m.logoDataUrl, false); }
+      }
+    }catch(e){ /* ignore corrupt meta, fall back to defaults */ }
+  }
+
+  function saveMeta(){
+    try{
+      const m = {};
+      metaFieldIds.forEach(id=>{
+        const el = document.getElementById(id);
+        if(el) m[id] = el.value;
+      });
+      m.logoDataUrl = logoDataUrl || "";
+      localStorage.setItem(META_KEY, JSON.stringify(m));
+    }catch(e){ /* storage may be full or unavailable */ }
+  }
+
+  function updateHeaderText(){
+    const instansi = document.getElementById("namaInstansi").value || "SD Negeri Citere · Subang, Jawa Barat";
+    const kelas = document.getElementById("kelasFase").value || "Kelas V B";
+    document.getElementById("eyebrowText").textContent = instansi;
+    document.getElementById("kelasFaseText").textContent = kelas;
+    document.title = "Daftar & Pembaharuan Usia Siswa — " + kelas;
+  }
+
+  function setLogo(dataUrl, doSave){
+    logoDataUrl = dataUrl || null;
+    const preview = document.getElementById("logoPreview");
+    const clearBtn = document.getElementById("btnLogoClear");
+    if(logoDataUrl){
+      preview.src = logoDataUrl;
+      preview.style.display = "inline-block";
+      clearBtn.style.display = "inline-block";
+    } else {
+      preview.style.display = "none";
+      clearBtn.style.display = "none";
+    }
+    if(doSave !== false) saveMeta();
+  }
+
+  function loadData(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(raw){
+        const parsed = JSON.parse(raw);
+        if(Array.isArray(parsed) && parsed.length) return parsed;
+      }
+    }catch(e){ /* ignore corrupt storage, fall back to seed */ }
+    return clone(seed);
+  }
+
+  function clone(arr){ return JSON.parse(JSON.stringify(arr)); }
+
+  function saveData(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(siswa)); }
+    catch(e){ showToast("Gagal menyimpan ke penyimpanan lokal."); }
+  }
+
+  function showToast(msg){
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(showToast._tm);
+    showToast._tm = setTimeout(()=> t.classList.remove("show"), 2200);
+  }
+
+  // ---- age calculation, mirrors Excel DATEDIF(Y / YM / MD) ----
+  function ageParts(birthStr, ref){
+    if(!birthStr) return null;
+    const b = new Date(birthStr + "T00:00:00");
+    if(isNaN(b.getTime()) || b > ref) return null;
+    let y = ref.getFullYear() - b.getFullYear();
+    let m = ref.getMonth() - b.getMonth();
+    let d = ref.getDate() - b.getDate();
+    if(d < 0){
+      m -= 1;
+      const prevMonthLastDay = new Date(ref.getFullYear(), ref.getMonth(), 0).getDate();
+      d += prevMonthLastDay;
+    }
+    if(m < 0){ y -= 1; m += 12; }
+    return {y,m,d};
+  }
+
+  function fmtAge(p){ return p ? (p.y + " thn " + p.m + " bln " + p.d + " hr") : "—"; }
+
+  function fmtDateID(dateObj){
+    if(!dateObj || isNaN(dateObj.getTime())) return "—";
+    const dd = String(dateObj.getDate()).padStart(2,"0");
+    const mm = String(dateObj.getMonth()+1).padStart(2,"0");
+    const yyyy = dateObj.getFullYear();
+    return dd + " / " + mm + " / " + yyyy;
+  }
+
+  function fmtDateLong(dateObj){
+    if(!dateObj || isNaN(dateObj.getTime())) return "—";
+    const bulan = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+    return dateObj.getDate() + " " + bulan[dateObj.getMonth()] + " " + dateObj.getFullYear();
+  }
+
+  function getRefDate(){
+    const v = document.getElementById("tanggalAcuan").value;
+    return v ? new Date(v + "T00:00:00") : new Date();
+  }
+
+  // ---- render (interactive on-screen table) ----
+  function render(){
+    refDate = getRefDate();
+    const q = document.getElementById("searchInput").value.trim().toLowerCase();
+
+    let rows = siswa.map((s, idx) => ({...s, _idx: idx}));
+    if(q){
+      rows = rows.filter(s =>
+        (s.nama||"").toLowerCase().includes(q) ||
+        (s.nisn||"").toLowerCase().includes(q) ||
+        (s.noInduk||"").toLowerCase().includes(q)
+      );
+    }
+    if(sortKey){
+      rows.sort((a,b)=>{
+        let va = (a[sortKey]||"").toString().toLowerCase();
+        let vb = (b[sortKey]||"").toString().toLowerCase();
+        if(sortKey === "tglLahir"){ va = a.tglLahir||""; vb = b.tglLahir||""; }
+        if(va < vb) return -1*sortDir;
+        if(va > vb) return 1*sortDir;
+        return 0;
+      });
+    }
+
+    const tbody = document.getElementById("tbody");
+    tbody.innerHTML = "";
+
+    if(rows.length === 0){
+      tbody.innerHTML = '<tr class="empty-row"><td colspan="9">Tidak ada data yang cocok. Coba kata kunci lain atau tambah siswa baru.</td></tr>';
+    }
+
+    rows.forEach((s, displayIdx) => {
+      const tr = document.createElement("tr");
+      const missingNisn = !s.nisn;
+      const missingInduk = !s.noInduk;
+      const age = ageParts(s.tglLahir, refDate);
+
+      tr.innerHTML = `
+        <td class="no-col">${displayIdx+1}</td>
+        <td class="nisn-col"><input class="mono ${missingNisn?'missing':''}" data-field="nisn" data-id="${s.id}" value="${escapeAttr(s.nisn)}" placeholder="—" maxlength="20"></td>
+        <td class="induk-col"><input class="mono ${missingInduk?'missing':''}" data-field="noInduk" data-id="${s.id}" value="${escapeAttr(s.noInduk)}" placeholder="—" maxlength="20"></td>
+        <td class="name-col"><input data-field="nama" data-id="${s.id}" value="${escapeAttr(s.nama)}" placeholder="Nama siswa"></td>
+        <td>
+          <select class="jk-select" data-field="jk" data-id="${s.id}">
+            <option value="L" ${s.jk==="L"?"selected":""}>L</option>
+            <option value="P" ${s.jk==="P"?"selected":""}>P</option>
+          </select>
+        </td>
+        <td><input data-field="tempatLahir" data-id="${s.id}" value="${escapeAttr(s.tempatLahir)}" placeholder="Tempat lahir"></td>
+        <td><input type="date" data-field="tglLahir" data-id="${s.id}" value="${escapeAttr(s.tglLahir)}"></td>
+        <td class="age-col">${fmtAge(age)}${(missingNisn||missingInduk)?'<span class="warn-dot" title="NISN/No Induk belum lengkap"></span>':''}</td>
+        <td class="action-col"><button class="btn-danger-text" data-del="${s.id}">Hapus</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    renderRecap();
+    saveData();
+  }
+
+  function escapeAttr(v){
+    return (v==null?"":String(v)).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");
+  }
+  function escapeHtml(v){
+    return (v==null?"":String(v)).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+
+  let lastAgeGroups = {};
+
+  function renderRecap(){
+    const total = siswa.length;
+    const L = siswa.filter(s=>s.jk==="L").length;
+    const P = siswa.filter(s=>s.jk==="P").length;
+    const missing = siswa.filter(s=>!s.nisn || !s.noInduk).length;
+    document.getElementById("recapTotal").textContent = total;
+    document.getElementById("recapL").textContent = L;
+    document.getElementById("recapP").textContent = P;
+    document.getElementById("recapMissing").textContent = missing;
+
+    const ref = refDate;
+    const groups = {};
+    siswa.forEach(s=>{
+      const a = ageParts(s.tglLahir, ref);
+      if(!a) return;
+      const key = a.y;
+      if(!groups[key]) groups[key] = {L:0,P:0};
+      groups[key][s.jk === "P" ? "P" : "L"] += 1;
+    });
+    lastAgeGroups = groups;
+
+    const ageGrid = document.getElementById("ageGrid");
+    ageGrid.innerHTML = "";
+    const years = Object.keys(groups).map(Number).sort((a,b)=>a-b);
+    if(years.length === 0){
+      ageGrid.innerHTML = '<p style="color:var(--ink-soft); font-size:13px;">Belum ada data usia yang bisa dihitung.</p>';
+      return;
+    }
+    years.forEach(y=>{
+      const g = groups[y];
+      const div = document.createElement("div");
+      div.className = "age-cell";
+      div.innerHTML = `
+        <div class="ttl">${y} Tahun</div>
+        <div class="row">
+          <span>L <b>${g.L}</b></span>
+          <span>P <b>${g.P}</b></span>
+          <span>Jml <b>${g.L+g.P}</b></span>
+        </div>`;
+      ageGrid.appendChild(div);
+    });
+  }
+
+  // ---- events: editing ----
+  document.getElementById("tbody").addEventListener("input", (e)=>{
+    const el = e.target;
+    const id = el.getAttribute("data-id");
+    const field = el.getAttribute("data-field");
+    if(!id || !field) return;
+    const s = siswa.find(x=>x.id===id);
+    if(!s) return;
+    s[field] = el.value;
+    if(field === "tglLahir" || field === "nisn" || field === "noInduk"){
+      render();
+      restoreFocus(id, field);
+    } else {
+      saveData();
+    }
+  });
+
+  document.getElementById("tbody").addEventListener("change", (e)=>{
+    const el = e.target;
+    const id = el.getAttribute("data-id");
+    const field = el.getAttribute("data-field");
+    if(!id || !field) return;
+    const s = siswa.find(x=>x.id===id);
+    if(!s) return;
+    s[field] = el.value;
+    render();
+  });
+
+  document.getElementById("tbody").addEventListener("click", (e)=>{
+    const delId = e.target.getAttribute("data-del");
+    if(delId){
+      const s = siswa.find(x=>x.id===delId);
+      if(s && confirm(`Hapus data "${s.nama || 'siswa ini'}" dari daftar?`)){
+        siswa = siswa.filter(x=>x.id!==delId);
+        render();
+        showToast("Data siswa dihapus.");
+      }
+    }
+  });
+
+  function restoreFocus(id, field){
+    const el = document.querySelector(`[data-id="${id}"][data-field="${field}"]`);
+    if(el){
+      el.focus();
+      const val = el.value;
+      el.setSelectionRange && el.setSelectionRange(val.length, val.length);
+    }
+  }
+
+  document.getElementById("btnAdd").addEventListener("click", ()=>{
+    siswa.push({id:"s_"+Date.now(), nisn:"", noInduk:"", nama:"", jk:"L", tempatLahir:"", tglLahir:""});
+    document.getElementById("searchInput").value = "";
+    render();
+    const inputs = document.querySelectorAll('[data-field="nama"]');
+    if(inputs.length) inputs[inputs.length-1].focus();
+    showToast("Baris siswa baru ditambahkan.");
+  });
+
+  document.getElementById("btnReset").addEventListener("click", ()=>{
+    if(confirm("Hapus SELURUH data siswa yang ada di tabel ini? Tindakan ini tidak bisa dibatalkan (kecuali sudah disimpan sebagai berkas).")){
+      siswa = [];
+      sortKey = null; sortDir = 1;
+      document.getElementById("searchInput").value = "";
+      document.querySelectorAll("thead th .arrow").forEach(a=>a.textContent="");
+      render();
+      showToast("Seluruh data siswa telah dikosongkan.");
+    }
+  });
+
+  document.getElementById("searchInput").addEventListener("input", render);
+  document.getElementById("tanggalAcuan").addEventListener("change", render);
+
+  // ---- simpan seluruh data (siswa + pengaturan + logo) ke satu berkas ----
+  function collectFullState(){
+    const meta = {};
+    metaFieldIds.forEach(id=>{
+      const el = document.getElementById(id);
+      if(el) meta[id] = el.value;
+    });
+    meta.logoDataUrl = logoDataUrl || "";
+    return {
+      appVersion: "200826xz",
+      savedAt: new Date().toISOString(),
+      siswa: siswa,
+      meta: meta
+    };
+  }
+
+  document.getElementById("btnSaveFile").addEventListener("click", ()=>{
+    const state = collectFullState();
+    const blob = new Blob([JSON.stringify(state, null, 2)], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const kelasSlug = (document.getElementById("kelasFase").value || "Kelas").trim().replace(/[^a-zA-Z0-9]+/g,"_");
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Data_Usia_Siswa_" + kelasSlug + "_" + new Date().toISOString().slice(0,10) + ".json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast("Data disimpan. Simpan berkas .json ini agar bisa dibuka kembali nanti.");
+  });
+
+  document.getElementById("btnLoadFile").addEventListener("click", ()=>{
+    document.getElementById("fileLoadState").click();
+  });
+  document.getElementById("fileLoadState").addEventListener("change", (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (evt)=>{
+      try{
+        const state = JSON.parse(evt.target.result);
+        if(!state || !Array.isArray(state.siswa)) throw new Error("format tidak sesuai");
+        if(confirm("Muat data dari berkas ini? Data yang sedang ditampilkan saat ini akan diganti.")){
+          siswa = state.siswa;
+          if(state.meta){
+            metaFieldIds.forEach(id=>{
+              const el = document.getElementById(id);
+              if(el && state.meta[id] !== undefined) el.value = state.meta[id];
+            });
+            setLogo(state.meta.logoDataUrl || null);
+          }
+          updateHeaderText();
+          saveMeta();
+          render();
+          showToast("Data berhasil dimuat dari berkas. Tinggal periksa tanggal acuan lalu cetak/ekspor.");
+        }
+      }catch(err){
+        showToast("Gagal membaca berkas. Pastikan ini berkas simpanan (.json) yang benar.");
+      }
+      document.getElementById("fileLoadState").value = "";
+    };
+    reader.readAsText(file);
+  });
+
+  document.getElementById("namaInstansi").addEventListener("input", ()=>{ updateHeaderText(); saveMeta(); });
+  document.getElementById("kelasFase").addEventListener("input", ()=>{ updateHeaderText(); saveMeta(); });
+  ["tahunAjaran","waliKelas","waliNip","kepsekNama","kepsekNip","tempatCetak"].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.addEventListener("input", saveMeta);
+  });
+
+  document.getElementById("btnLogoPick").addEventListener("click", ()=>{
+    document.getElementById("logoInput").click();
+  });
+  document.getElementById("logoInput").addEventListener("change", (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    if(!file.type.startsWith("image/")){
+      showToast("Berkas harus berupa gambar.");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (evt)=>{
+      setLogo(evt.target.result);
+      showToast("Logo instansi berhasil diunggah.");
+    };
+    reader.readAsDataURL(file);
+  });
+  document.getElementById("btnLogoClear").addEventListener("click", ()=>{
+    document.getElementById("logoInput").value = "";
+    setLogo(null);
+    showToast("Logo dihapus.");
+  });
+
+  document.querySelectorAll("thead th[data-sort]").forEach(th=>{
+    th.addEventListener("click", ()=>{
+      const key = th.getAttribute("data-sort");
+      if(sortKey === key){ sortDir *= -1; } else { sortKey = key; sortDir = 1; }
+      document.querySelectorAll("thead th .arrow").forEach(a=>a.textContent="");
+      th.querySelector(".arrow").textContent = sortDir === 1 ? "▲" : "▼";
+      render();
+    });
+  });
+
+  // ---- export current data to Excel ----
+  document.getElementById("btnExport").addEventListener("click", ()=>{
+    const ref = getRefDate();
+    const tahunAjaran = document.getElementById("tahunAjaran").value || "";
+    const wali = document.getElementById("waliKelas").value || "";
+    const namaInstansi = document.getElementById("namaInstansi").value || "";
+    const kelasFase = document.getElementById("kelasFase").value || "";
+
+    const header = [
+      ["DAFTAR USIA SISWA " + kelasFase.toUpperCase()],
+      [namaInstansi + "  TAHUN AJARAN " + tahunAjaran + "  |  Wali Kelas: " + wali + "  |  Tanggal Acuan: " + fmtDateID(ref)],
+      [],
+      ["No","NISN","No Induk","Nama","Jenis Kelamin","Tempat Lahir","Tanggal Lahir","Usia (Tahun)","Usia (Bulan)","Usia (Hari)"]
+    ];
+    siswa.forEach((s,i)=>{
+      const a = ageParts(s.tglLahir, ref);
+      header.push([i+1, s.nisn, s.noInduk, s.nama, s.jk, s.tempatLahir, s.tglLahir, a?a.y:"", a?a.m:"", a?a.d:""]);
+    });
+    header.push([]);
+    header.push(["Rekap","Laki-laki", siswa.filter(s=>s.jk==="L").length]);
+    header.push(["","Perempuan", siswa.filter(s=>s.jk==="P").length]);
+    header.push(["","Total", siswa.length]);
+
+    const wsMain = XLSX.utils.aoa_to_sheet(header);
+    wsMain["!cols"] = [{wch:5},{wch:14},{wch:12},{wch:28},{wch:8},{wch:14},{wch:14},{wch:10},{wch:10},{wch:10}];
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, wsMain, "Daftar Usia 5B");
+    XLSX.writeFile(wb, "Daftar_Usia_Siswa_5B_" + ref.toISOString().slice(0,10) + ".xlsx");
+    showToast("Berkas Excel sedang diunduh.");
+  });
+
+  // ---- downloadable import template ----
+  document.getElementById("btnTemplate").addEventListener("click", ()=>{
+    const rows = [
+      ["No","NISN","No Induk","Nama","Jenis Kelamin (L/P)","Tempat Lahir","Tanggal Lahir (YYYY-MM-DD)"],
+      [1,"3165077394","222301034","Nama Siswa Contoh","P","BANDUNG","2016-03-10"]
+    ];
+    const ws = XLSX.utils.aoa_to_sheet(rows);
+    ws["!cols"] = [{wch:5},{wch:14},{wch:12},{wch:28},{wch:16},{wch:14},{wch:20}];
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Template Impor");
+    XLSX.writeFile(wb, "Template_Impor_Daftar_Siswa.xlsx");
+    showToast("Template impor sedang diunduh. Isi lalu impor kembali lewat tombol 'Impor dari Excel'.");
+  });
+
+  // ---- import from Excel (accepts the same layout as the template / exported file) ----
+  document.getElementById("btnImport").addEventListener("click", ()=>{
+    document.getElementById("fileImport").click();
+  });
+  document.getElementById("fileImport").addEventListener("change", (e)=>{
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(evt){
+      try{
+        const wb = XLSX.read(evt.target.result, {type:"array", cellDates:true});
+        const wsName = wb.SheetNames[0];
+        const rows = XLSX.utils.sheet_to_json(wb.Sheets[wsName], {header:1, defval:""});
+        const imported = [];
+        rows.forEach(r=>{
+          const nama = (r[3]||"").toString().trim();
+          const jk = (r[4]||"").toString().trim().toUpperCase();
+          if(!nama || (jk!=="L" && jk!=="P")) return;
+          let tgl = r[6];
+          let tglStr = "";
+          if(tgl instanceof Date && !isNaN(tgl)){
+            tglStr = tgl.toISOString().slice(0,10);
+          } else if(typeof tgl === "string" && tgl){
+            const d = new Date(tgl);
+            if(!isNaN(d)) tglStr = d.toISOString().slice(0,10);
+          }
+          imported.push({
+            id:"imp_"+Date.now()+"_"+imported.length,
+            nisn:(r[1]||"").toString().trim(),
+            noInduk:(r[2]||"").toString().trim(),
+            nama, jk,
+            tempatLahir:(r[5]||"").toString().trim(),
+            tglLahir: tglStr
+          });
+        });
+        if(imported.length === 0){
+          showToast("Tidak ditemukan baris siswa yang valid. Gunakan format template impor.");
+          return;
+        }
+        if(confirm(`Ditemukan ${imported.length} baris siswa. Ganti seluruh data yang ada saat ini?`)){
+          siswa = imported;
+          render();
+          showToast("Data berhasil diimpor dari Excel.");
+        }
+      }catch(err){
+        showToast("Gagal membaca berkas Excel. Pastikan formatnya sesuai template.");
+      }
+      document.getElementById("fileImport").value = "";
+    };
+    reader.readAsArrayBuffer(file);
+  });
+
+  // ---- build the plain, print-only sheet, then print ----
+  function buildPrintArea(){
+    const ref = getRefDate();
+    const tahunAjaran = escapeHtml(document.getElementById("tahunAjaran").value || "");
+    const wali = escapeHtml(document.getElementById("waliKelas").value || "");
+    const waliNip = escapeHtml(document.getElementById("waliNip").value || "");
+    const kepsekNama = escapeHtml(document.getElementById("kepsekNama").value || "");
+    const kepsekNip = escapeHtml(document.getElementById("kepsekNip").value || "");
+    const tempatCetak = escapeHtml(document.getElementById("tempatCetak").value || "");
+    const tglCetakVal = document.getElementById("tanggalCetak").value;
+    const tglCetak = tglCetakVal ? new Date(tglCetakVal + "T00:00:00") : new Date();
+    const namaInstansi = escapeHtml(document.getElementById("namaInstansi").value || "");
+    const kelasFase = escapeHtml(document.getElementById("kelasFase").value || "");
+
+    let rowsHtml = "";
+    siswa.forEach((s,i)=>{
+      const a = ageParts(s.tglLahir, ref);
+      const bDate = s.tglLahir ? new Date(s.tglLahir + "T00:00:00") : null;
+      rowsHtml += `<tr>
+        <td class="p-num">${i+1}</td>
+        <td class="p-mono">${escapeHtml(s.nisn) || "—"}</td>
+        <td class="p-mono">${escapeHtml(s.noInduk) || "—"}</td>
+        <td>${escapeHtml(s.nama) || "—"}</td>
+        <td class="p-num">${escapeHtml(s.jk)}</td>
+        <td>${escapeHtml(s.tempatLahir) || "—"}</td>
+        <td class="p-num">${fmtDateID(bDate)}</td>
+        <td class="p-mono">${fmtAge(a)}</td>
+      </tr>`;
+    });
+
+    const L = siswa.filter(s=>s.jk==="L").length;
+    const P = siswa.filter(s=>s.jk==="P").length;
+
+    let ageRowsHtml = "";
+    Object.keys(lastAgeGroups).map(Number).sort((a,b)=>a-b).forEach(y=>{
+      const g = lastAgeGroups[y];
+      ageRowsHtml += `<tr><td>${y} Tahun</td><td>${g.L}</td><td>${g.P}</td><td>${g.L+g.P}</td></tr>`;
+    });
+
+    document.getElementById("printArea").innerHTML = `
+      <div class="p-letterhead">
+        ${logoDataUrl ? `<img src="${logoDataUrl}" class="p-logo" alt="Logo">` : ""}
+        <div class="p-eyebrow">${namaInstansi}</div>
+        <div class="p-title">DAFTAR &amp; PEMBAHARUAN USIA SISWA ${kelasFase.toUpperCase()}</div>
+        <div class="p-sub">Tahun Ajaran ${tahunAjaran} &middot; Wali Kelas: ${wali} &middot; Tanggal Acuan Usia: ${fmtDateID(ref)}</div>
+      </div>
+
+      <table class="p-table">
+        <thead><tr>
+          <th>No</th><th>NISN</th><th>No Induk</th><th>Nama</th><th>JK</th><th>Tempat Lahir</th><th>Tanggal Lahir</th><th>Usia (Thn/Bln/Hr)</th>
+        </tr></thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+
+      <div class="p-recap">
+        <div class="p-recap-box">Total Siswa: <b>${siswa.length}</b> &nbsp;|&nbsp; Laki-laki: <b>${L}</b> &nbsp;|&nbsp; Perempuan: <b>${P}</b></div>
+        <table class="p-age">
+          <thead><tr><th>Usia</th><th>L</th><th>P</th><th>Jml</th></tr></thead>
+          <tbody>${ageRowsHtml || '<tr><td colspan="4">—</td></tr>'}</tbody>
+        </table>
+      </div>
+
+      <div class="p-signoff">
+        <div class="p-signoff-col">
+          <div>Mengetahui,</div>
+          <div>Kepala Sekolah</div>
+          <div class="p-sign-space"></div>
+          <div class="p-sign-name">${kepsekNama || "....................................."}</div>
+          <div class="p-sign-nip">NIP. ${kepsekNip || "....................................."}</div>
+        </div>
+        <div class="p-signoff-col">
+          <div>${tempatCetak || "....................."}, ${fmtDateLong(tglCetak)}</div>
+          <div>Wali ${kelasFase || "Kelas"}</div>
+          <div class="p-sign-space"></div>
+          <div class="p-sign-name">${wali || "....................................."}</div>
+          <div class="p-sign-nip">NIP. ${waliNip || "....................................."}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  document.getElementById("btnPrint").addEventListener("click", ()=>{
+    buildPrintArea();
+    window.print();
+  });
+  window.addEventListener("beforeprint", buildPrintArea);
+
+  // ---- init ----
+  document.getElementById("tanggalAcuan").value = new Date().toISOString().slice(0,10);
+  document.getElementById("tanggalCetak").value = new Date().toISOString().slice(0,10);
+  loadMeta();
+  updateHeaderText();
+  render();
+})();
+</script>
+</body>
+</html>
