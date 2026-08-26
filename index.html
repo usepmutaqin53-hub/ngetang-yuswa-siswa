@@ -172,7 +172,18 @@
   td input.missing{background:#FBEAEA; border-color:var(--brick-dim);}
   .name-col input{font-weight:600; min-width:170px;}
   .age-col{font-family:'IBM Plex Mono', monospace; font-size:12.5px; color:var(--ink-soft); white-space:nowrap;}
-  select.jk-select{cursor:pointer;}
+  select.jk-select{
+    cursor:pointer;
+    appearance:none; -webkit-appearance:none; -moz-appearance:none;
+    width:100%; min-width:64px; box-sizing:border-box;
+    padding:6px 22px 6px 10px;
+    text-align:center; text-align-last:center; -moz-text-align-last:center;
+    background-image:url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='%234B5A72' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 7px center;
+    background-size:10px 7px;
+  }
+  td.jk-col, th.jk-col{width:78px; min-width:78px;}
   .action-col{text-align:center; white-space:nowrap;}
   .warn-dot{display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--brick); margin-left:5px; vertical-align:middle;}
   .empty-row td{padding:34px 10px; text-align:center; color:var(--ink-soft); font-style:italic;}
@@ -194,6 +205,22 @@
   .age-cell .ttl{font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em;}
   .age-cell .row{display:flex; gap:12px; margin-top:6px; font-size:13px;}
   .age-cell .row span b{font-family:'IBM Plex Mono', monospace;}
+
+  /* ---------- Rekomendasi ---------- */
+  .reco-list{display:flex; flex-direction:column; gap:10px; margin-bottom:30px;}
+  .reco-item{
+    display:flex; gap:12px; align-items:flex-start;
+    background:#fff; border:1px solid var(--line); border-left:4px solid var(--navy-600);
+    border-radius:10px; padding:12px 16px;
+  }
+  .reco-item.warn{border-left-color:var(--brick);}
+  .reco-item.ok{border-left-color:var(--ok);}
+  .reco-item.info{border-left-color:var(--gold);}
+  .reco-icon{font-size:17px; line-height:1.3; margin-top:1px;}
+  .reco-body{flex:1; min-width:0;}
+  .reco-title{font-weight:700; font-size:13.5px; color:var(--navy-800); margin-bottom:2px;}
+  .reco-desc{font-size:12.5px; color:var(--ink-soft); line-height:1.55;}
+  .reco-empty{color:var(--ink-soft); font-size:13px; font-style:italic; margin:0;}
 
   /* ---------- Pengesahan form (on-screen) ---------- */
   .signoff-form{
@@ -325,7 +352,7 @@
             <th data-sort="nisn">NISN <span class="arrow"></span></th>
             <th data-sort="noInduk">No Induk <span class="arrow"></span></th>
             <th data-sort="nama">Nama <span class="arrow"></span></th>
-            <th data-sort="jk">JK <span class="arrow"></span></th>
+            <th data-sort="jk" class="jk-col">JK <span class="arrow"></span></th>
             <th data-sort="tempatLahir">Tempat Lahir <span class="arrow"></span></th>
             <th data-sort="tglLahir">Tanggal Lahir <span class="arrow"></span></th>
             <th class="no-sort">Usia (thn / bln / hr)</th>
@@ -346,6 +373,9 @@
 
     <div class="subhead"><span>Sebaran Usia</span><span class="rule"></span></div>
     <div class="age-grid" id="ageGrid"></div>
+
+    <div class="subhead"><span>Rekomendasi &amp; Catatan</span><span class="rule"></span><span class="hint">diperbarui otomatis</span></div>
+    <div class="reco-list" id="recoList"></div>
 
     <div class="subhead"><span>Data Pengesahan</span><span class="rule"></span><span class="hint">tampil di halaman cetak</span></div>
     <div class="signoff-form">
@@ -580,7 +610,7 @@
         <td class="nisn-col"><input class="mono ${missingNisn?'missing':''}" data-field="nisn" data-id="${s.id}" value="${escapeAttr(s.nisn)}" placeholder="—" maxlength="20"></td>
         <td class="induk-col"><input class="mono ${missingInduk?'missing':''}" data-field="noInduk" data-id="${s.id}" value="${escapeAttr(s.noInduk)}" placeholder="—" maxlength="20"></td>
         <td class="name-col"><input data-field="nama" data-id="${s.id}" value="${escapeAttr(s.nama)}" placeholder="Nama siswa"></td>
-        <td>
+        <td class="jk-col">
           <select class="jk-select" data-field="jk" data-id="${s.id}">
             <option value="L" ${s.jk==="L"?"selected":""}>L</option>
             <option value="P" ${s.jk==="P"?"selected":""}>P</option>
@@ -595,6 +625,7 @@
     });
 
     renderRecap();
+    renderRecommendations();
     saveData();
   }
 
@@ -648,6 +679,94 @@
         </div>`;
       ageGrid.appendChild(div);
     });
+  }
+
+  // ---- rekomendasi otomatis berdasarkan data & usia siswa ----
+  function renderRecommendations(){
+    const list = document.getElementById("recoList");
+    if(!list) return;
+
+    if(siswa.length === 0){
+      list.innerHTML = '<p class="reco-empty">Belum ada data siswa untuk dianalisis. Tambahkan siswa terlebih dahulu.</p>';
+      return;
+    }
+
+    const items = [];
+
+    // 1) Kelengkapan data
+    const missingList = siswa.filter(s => !s.nisn || !s.noInduk || !s.tglLahir || !s.tempatLahir || !s.nama);
+    if(missingList.length > 0){
+      const names = missingList.slice(0,6).map(s=>s.nama || "(tanpa nama)").join(", ");
+      const extra = missingList.length > 6 ? `, dan ${missingList.length-6} siswa lainnya` : "";
+      items.push({
+        type:"warn", icon:"⚠️",
+        title:`${missingList.length} siswa memiliki data belum lengkap`,
+        desc:`${names}${extra}. Lengkapi NISN, No Induk, tempat, dan tanggal lahir sebelum dipakai untuk keperluan resmi (rapor, Dapodik, dsb).`
+      });
+    } else {
+      items.push({
+        type:"ok", icon:"✅",
+        title:"Semua data siswa sudah lengkap",
+        desc:"NISN, No Induk, nama, tempat, dan tanggal lahir sudah terisi untuk seluruh siswa."
+      });
+    }
+
+    // 2) Analisis usia (rata-rata, termuda, tertua, dan penyimpangan usia)
+    const ages = siswa.map(s=>{
+      const a = ageParts(s.tglLahir, refDate);
+      return a ? {nama:s.nama || "(tanpa nama)", months: a.y*12 + a.m, y:a.y, m:a.m} : null;
+    }).filter(Boolean);
+
+    if(ages.length > 0){
+      const avgMonths = ages.reduce((sum,a)=>sum+a.months,0) / ages.length;
+      const sorted = [...ages].sort((a,b)=>a.months-b.months);
+      const youngest = sorted[0];
+      const oldest = sorted[sorted.length-1];
+      const avgY = Math.floor(avgMonths/12);
+      const avgM = Math.round(avgMonths%12);
+
+      items.push({
+        type:"info", icon:"📊",
+        title:`Rata-rata usia siswa: ${avgY} thn ${avgM} bln`,
+        desc:`Termuda: ${youngest.nama} (${youngest.y} thn ${youngest.m} bln) · Tertua: ${oldest.nama} (${oldest.y} thn ${oldest.m} bln), dihitung dari tanggal acuan usia yang dipilih.`
+      });
+
+      const THRESH_BULAN = 8;
+      const outliers = ages.filter(a => Math.abs(a.months - avgMonths) >= THRESH_BULAN);
+      if(outliers.length > 0){
+        const names = outliers.slice(0,6).map(o=>o.nama).join(", ");
+        const extra = outliers.length > 6 ? `, dan ${outliers.length-6} siswa lainnya` : "";
+        items.push({
+          type:"warn", icon:"🔎",
+          title:`${outliers.length} siswa usianya menyimpang cukup jauh dari rata-rata kelas`,
+          desc:`${names}${extra}. Selisih usia lebih dari sekitar ${(THRESH_BULAN/12).toFixed(1)} tahun dari rata-rata kelas — cek kembali tanggal lahirnya, atau perhatikan kesiapan belajarnya secara khusus.`
+        });
+      }
+    }
+
+    // 3) Keseimbangan jenis kelamin
+    const L = siswa.filter(s=>s.jk==="L").length;
+    const P = siswa.filter(s=>s.jk==="P").length;
+    if(L > 0 && P > 0){
+      const ratio = Math.max(L,P) / Math.min(L,P);
+      if(ratio >= 1.8){
+        items.push({
+          type:"info", icon:"⚖️",
+          title:"Komposisi jenis kelamin kurang seimbang",
+          desc:`Laki-laki ${L} siswa, Perempuan ${P} siswa. Pertimbangkan hal ini saat membentuk kelompok belajar campuran.`
+        });
+      }
+    }
+
+    list.innerHTML = items.map(it => `
+      <div class="reco-item ${it.type}">
+        <div class="reco-icon">${it.icon}</div>
+        <div class="reco-body">
+          <div class="reco-title">${escapeHtml(it.title)}</div>
+          <div class="reco-desc">${escapeHtml(it.desc)}</div>
+        </div>
+      </div>
+    `).join("");
   }
 
   // ---- events: editing ----
