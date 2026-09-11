@@ -563,6 +563,58 @@
     return dateObj.getDate() + " " + bulan[dateObj.getMonth()] + " " + dateObj.getFullYear();
   }
 
+  // ---- robust birth-date parser for Excel import (handles DD/MM/YYYY text,
+  //      YYYY-MM-DD text, real Date objects, and raw Excel serial numbers) ----
+  function parseTglLahir(raw){
+    if(raw === null || raw === undefined || raw === "") return "";
+
+    if(raw instanceof Date && !isNaN(raw.getTime())){
+      const y = raw.getFullYear(), m = String(raw.getMonth()+1).padStart(2,"0"), d = String(raw.getDate()).padStart(2,"0");
+      return `${y}-${m}-${d}`;
+    }
+
+    if(typeof raw === "number" && isFinite(raw)){
+      const parsed = XLSX.SSF.parse_date_code(raw);
+      if(parsed && parsed.y){
+        return `${parsed.y}-${String(parsed.m).padStart(2,"0")}-${String(parsed.d).padStart(2,"0")}`;
+      }
+      return "";
+    }
+
+    if(typeof raw === "string"){
+      const s = raw.trim();
+      if(!s) return "";
+
+      // YYYY-MM-DD or YYYY/MM/DD
+      let m = s.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
+      if(m){
+        return `${m[1]}-${m[2].padStart(2,"0")}-${m[3].padStart(2,"0")}`;
+      }
+
+      // DD-MM-YYYY or DD/MM/YYYY (the format actually used by our export/most Indonesian spreadsheets)
+      m = s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+      if(m){
+        let dd = +m[1], mm = +m[2];
+        const yyyy = +m[3];
+        // if the first number can't be a month, it must be day/month swapped the other way
+        if(mm > 12 && dd <= 12){ const tmp = dd; dd = mm; mm = tmp; }
+        if(mm >= 1 && mm <= 12 && dd >= 1 && dd <= 31){
+          return `${yyyy}-${String(mm).padStart(2,"0")}-${String(dd).padStart(2,"0")}`;
+        }
+        return "";
+      }
+
+      // last resort: let the browser try (covers things like "26 Desember 2019" -> often fails, safe fallback)
+      const d = new Date(s);
+      if(!isNaN(d.getTime())){
+        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+      }
+      return "";
+    }
+
+    return "";
+  }
+
   function getRefDate(){
     const v = document.getElementById("tanggalAcuan").value;
     return v ? new Date(v + "T00:00:00") : new Date();
@@ -1008,14 +1060,7 @@
           const nama = (r[3]||"").toString().trim();
           const jk = (r[4]||"").toString().trim().toUpperCase();
           if(!nama || (jk!=="L" && jk!=="P")) return;
-          let tgl = r[6];
-          let tglStr = "";
-          if(tgl instanceof Date && !isNaN(tgl)){
-            tglStr = tgl.toISOString().slice(0,10);
-          } else if(typeof tgl === "string" && tgl){
-            const d = new Date(tgl);
-            if(!isNaN(d)) tglStr = d.toISOString().slice(0,10);
-          }
+          const tglStr = parseTglLahir(r[6]);
           imported.push({
             id:"imp_"+Date.now()+"_"+imported.length,
             nisn:(r[1]||"").toString().trim(),
